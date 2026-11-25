@@ -70,7 +70,13 @@
 
     // ② 제목 수정 — PATCH /todos/{id}, 본문 {"title": title}
     async function updateTitle(id, title) {
-      throw new Error("updateTitle — index.html에서 아직 구현하지 않았습니다");
+      const res = await fetch(`${API_BASE}/todos/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title }),
+      });
+
+      return check(res, "PATCH /todos");
     }
 
     // ③ 완료 변경 — PATCH /todos/{id}, 본문 {"completed": completed}
