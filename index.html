@@ -60,7 +60,12 @@
     // ① 등록 — POST /todos, 본문 {"title": title}
     //    method · headers(Content-Type) · body(JSON.stringify)를 넣는다
     async function createTodo(title) {
-      throw new Error("createTodo — index.html에서 아직 구현하지 않았습니다");
+      const res = await fetch(`${API_BASE}/todos`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title }),
+      });
+      return check(res, "POST /todos");
     }
 
     // ② 제목 수정 — PATCH /todos/{id}, 본문 {"title": title}
