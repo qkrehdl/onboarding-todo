@@ -117,7 +117,12 @@ def create_todo(body: TodoCreate):
         raise HTTPException(status_code=400, detail="제목을 입력하세요")
 
     with Session(engine) as session:
-        todo = Todo(title=title, completed=False, created_at=now())
+        todo = Todo(
+            title=title, 
+            completed=False, 
+            created_at=now(),
+        )
+        
         session.add(todo)
         session.commit()
         session.refresh(todo)
