@@ -108,15 +108,25 @@ def list_todos():
         return [to_dict(t) for t in todos]
 
 
+
 @app.post("/todos", status_code=201)
 def create_todo(body: TodoCreate):
-    """TODO 등록 — 실습 ①에서 구현합니다.
+    title = body.title.strip()
 
-    1. body.title의 앞뒤 공백을 지우고, 비어 있으면 400을 돌려준다 (HTTPException)
-    2. Todo(title=..., completed=False, created_at=now())를 만들어 session.add
-    3. session.commit()으로 저장하고, session.refresh로 새 id를 받아 dict로 돌려준다
-    """
-    raise HTTPException(status_code=501, detail="아직 구현하지 않았습니다")
+    if not title:
+        raise HTTPException(status_code=400, detail="제목을 입력하세요")
+
+    with Session(engine) as session:
+        todo = Todo(
+            title=title, 
+            completed=False, 
+            created_at=now(),
+        )
+        
+        session.add(todo)
+        session.commit()
+        session.refresh(todo)
+        return to_dict(todo)
 
 
 @app.patch("/todos/{todo_id}")
