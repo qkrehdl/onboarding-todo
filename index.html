@@ -81,7 +81,12 @@
 
     // ③ 완료 변경 — PATCH /todos/{id}, 본문 {"completed": completed}
     async function setCompleted(id, completed) {
-      throw new Error("setCompleted — index.html에서 아직 구현하지 않았습니다");
+      const res = await fetch(`${API_BASE}/todos/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ completed }),
+      });
+      return check(res, "PATCH /todos");
     }
 
     // ④ 삭제 — DELETE /todos/{id}, 본문 없음
