@@ -144,6 +144,9 @@ def update_todo(todo_id: int, body: TodoUpdate):
                 raise HTTPException(status_code=400, detail="제목을 입력하세요")
 
             todo.title = title
+            
+        if body.completed is not None:
+            todo.completed = body.completed
 
         session.commit()
         session.refresh(todo)
