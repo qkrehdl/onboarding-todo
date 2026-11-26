@@ -131,13 +131,24 @@ def create_todo(body: TodoCreate):
 
 @app.patch("/todos/{todo_id}")
 def update_todo(todo_id: int, body: TodoUpdate):
-    """TODO 수정 · 완료 변경 — 실습 ②③에서 구현합니다.
+    with Session(engine) as session:
+        todo = session.get(Todo, todo_id)
 
-    1. session.get(Todo, todo_id)로 찾고, 없으면 404
-    2. body.title이 있으면 title을, body.completed가 있으면 completed를 바꾼다
-    3. session.commit() 뒤 dict로 돌려준다
-    """
-    raise HTTPException(status_code=501, detail="아직 구현하지 않았습니다")
+        if todo is None:
+            raise HTTPException(status_code=404, detail="TODO를 찾을 수 없습니다")
+
+        if body.title is not None:
+            title = body.title.strip()
+
+            if not title:
+                raise HTTPException(status_code=400, detail="제목을 입력하세요")
+
+            todo.title = title
+
+        session.commit()
+        session.refresh(todo)
+
+        return to_dict(todo)
 
 
 @app.delete("/todos/{todo_id}", status_code=204)
