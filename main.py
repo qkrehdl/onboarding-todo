@@ -156,9 +156,14 @@ def update_todo(todo_id: int, body: TodoUpdate):
 
 @app.delete("/todos/{todo_id}", status_code=204)
 def delete_todo(todo_id: int):
-    """TODO 삭제 — 실습 ④에서 구현합니다.
+    with Session(engine) as session:
+        todo = session.get(Todo, todo_id)
 
-    1. session.get(Todo, todo_id)로 찾고, 없으면 404
-    2. session.delete(todo) 뒤 session.commit()
-    """
-    raise HTTPException(status_code=501, detail="아직 구현하지 않았습니다")
+        if todo is None:
+            raise HTTPException(
+                status_code=404,
+                detail="TODO를 찾을 수 없습니다",
+            )
+
+        session.delete(todo)
+        session.commit()
